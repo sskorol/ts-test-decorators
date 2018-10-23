@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "declaration": true,
+    "strict": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es6"
+    ],
+    "removeComments": true,
+    "noImplicitAny": false,
+    "typeRoots": [
+      "./node_modules/@types/",
+      "./types/"
+    ]
+  },
+  "exclude": [
+    "./node_modules/"
+  ],
+  "compileOnSave": false
+}

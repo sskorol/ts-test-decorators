@@ -1,0 +1,4 @@
+--ui mocha-typescript
+--require source-map-support/register
+--timeout 16000
+test/specs/*.js

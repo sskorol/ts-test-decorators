@@ -1,0 +1,12 @@
+.allure-results
+node_modules/
+types
+test
+*.js
+*.tgz
+.DS_Store
+.idea/
+.nyc_output
+package
+coverage
+*.log
