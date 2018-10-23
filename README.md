@@ -115,7 +115,8 @@ Assuming usage with **mocha**, **allure** and **wdio**, you will also need the f
     "removeComments": true,
     "noImplicitAny": false,
     "typeRoots": [
-      "./node_modules/@types/"
+      "./node_modules/@types/",
+      "./node_modules/ts-test-decorators/types/"
     ]
   },
   "exclude": [
