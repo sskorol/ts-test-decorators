@@ -1,6 +1,5 @@
 .allure-results
 node_modules/
-types
 test
 *.js
 *.tgz

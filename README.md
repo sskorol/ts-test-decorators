@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/sskorol/ts-test-decorators.svg?branch=master)](https://travis-ci.com/sskorol/ts-test-decorators)
 [![codecov](https://codecov.io/gh/sskorol/ts-test-decorators/branch/master/graph/badge.svg)](https://codecov.io/gh/sskorol/ts-test-decorators)
+[![npm version](https://badge.fury.io/js/ts-test-decorators.svg)](https://badge.fury.io/js/ts-test-decorators)
 
 This project will help to smoothly migrate from Java to Javascript automation.
 
@@ -45,9 +46,12 @@ The answer is using Typescript and decorators.
 However, it has nothing to do with [Allure](https://github.com/webdriverio-boneyard/wdio-allure-reporter).
 Moreover, there's no flexible [Data Provider](https://github.com/sskorol/test-data-supplier) mechanism available. 
 
-This library is intended to fill these gaps, so that you can write tests the following way:
+This library is intended to fill these gaps, so that you can write [webdriverio](https://github.com/webdriverio/webdriverio) tests the following way:
 
 ```typescript
+import { suite, test } from 'mocha-typescript';
+import { data, feature, issue, severity, SeverityLevel, story, testCaseId } from 'ts-test-decorators';
+      
 @suite
 class AuthorizationTests {
       
@@ -85,16 +89,6 @@ or via yarn:
 ```bash
 yarn add ts-test-decorators --dev
 ```
-Assuming usage with **mocha**, **allure** and **wdio**, you will also need the following dependencies:
- 
- - webdriverio
- - wdio-allure-reporter
- - wdio-mocha-framework
- - mocha
- - mocha-typescript
- - ts-node
- - source-map-support
- - typescript
 
 ## Configuration
 
@@ -115,7 +109,8 @@ Assuming usage with **mocha**, **allure** and **wdio**, you will also need the f
     "removeComments": true,
     "noImplicitAny": false,
     "typeRoots": [
-      "./node_modules/@types/"
+      "./node_modules/@types/",
+      "./node_modules/ts-test-decorators/types/"
     ]
   },
   "exclude": [
