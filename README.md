@@ -1,6 +1,6 @@
 # Test Decorators
 
-[![Travis (.com) branch](https://img.shields.io/travis/com/:user/:repo/:branch.svg)](https://travis-ci.com/sskorol/ts-test-decorators.svg?branch=master)
+[![Build Status](https://travis-ci.com/sskorol/ts-test-decorators.svg?branch=master)](https://travis-ci.com/sskorol/ts-test-decorators)
 [![codecov](https://codecov.io/gh/sskorol/ts-test-decorators/branch/master/graph/badge.svg)](https://codecov.io/gh/sskorol/ts-test-decorators)
 
 This project will help to smoothly migrate from Java to Javascript automation.
