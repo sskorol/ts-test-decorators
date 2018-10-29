@@ -1,102 +1,103 @@
-import * as cheerio from 'cheerio';
-import * as del from 'del';
-import * as fs from 'fs';
-import * as http from 'http';
-import * as staticServer from 'node-static';
+import jetpack = require('fs-jetpack');
+import * as Mocha from 'mocha';
+import { MochaAllureReporter } from 'mocha-allure2-reporter/src/MochaAllureReporter';
 import * as path from 'path';
-import * as enableDestroy from 'server-destroy';
-import * as Launcher from 'webdriverio/build/lib/launcher';
+import * as PropertiesReader from 'properties-reader';
 
-const resultsDir = path.join(__dirname, '../../.allure-results');
-let logs;
-let originalConsole;
+const testDir = './test/fixtures/specs';
+const resultsDir = path.join(__dirname, '../../allure-results');
+const resultsPollingInterval: number = 10;
 
-export function getResults() {
-  return getResultFiles('xml').map(file => {
-    return cheerio.load(fs.readFileSync(path.join(resultsDir, file), 'utf-8'));
+let results: any[] = [];
+
+export function runTests(...specs: string[]) {
+  const mocha = new Mocha();
+  assignSpecs(mocha, specs);
+  mocha
+    .reporter(MochaAllureReporter)
+    .run(failures => {
+      process.exitCode = failures ? 1 : 0;
+    })
+    .on('end', () => (results = readResults('*.json')));
+}
+
+export function whenResultsAppeared() {
+  return new Promise((resolve, reject) => {
+    (function waitForResults() {
+      if (results.length > 0) {
+        return resolve();
+      }
+      setTimeout(waitForResults, resultsPollingInterval);
+    })();
   });
 }
 
-export function getResultFiles(patterns) {
-  if (!Array.isArray(patterns)) {
-    patterns = [patterns];
-  }
-  return fs.readdirSync(resultsDir).filter(file => patterns.some(pattern => file.endsWith('.' + pattern)));
+export function findTest(name: string): any {
+  return results.find(result => result.name === name);
 }
 
-export function clean() {
-  return del(resultsDir);
+export function findStatusDetails(testName: string, key: string): any {
+  return findTest(testName).statusDetails[key];
 }
 
-export function runMocha(specs, wdioConfigPath = '') {
-  const features = specs.map(spec => `./test/fixtures/specs/${spec}.js`);
-  const configPath = wdioConfigPath || './test/fixtures/wdio.conf/wdio.conf.mocha.js';
-
-  return run(features, configPath);
+export function findLabel(testName: string, labelName: string): any {
+  return findTest(testName).labels.find(label => label.name === labelName);
 }
 
-function run(specs, wdioConfigPath) {
-  const testHttpServer = startTestHttpServer();
-  disableOutput();
-  const launcher = new Launcher(wdioConfigPath, { specs });
-
-  return launcher.run().then(() => {
-    enableOutput();
-    stopTestHttpServer(testHttpServer);
-    return getResults();
-  });
+export function findParameter(testName: string, parameterName: string): any {
+  return findParameters(testName).find(parameter => parameter.name === parameterName);
 }
 
-function disableOutput() {
-  if (process.env.FULL_OUTPUT) {
-    return;
-  }
-  const mockLog = type => (...message) => {
-    logs[type].push(message.join(' '));
-  };
-  logs = {
-    error: [],
-    log: [],
-    warn: []
-  };
-  /* tslint:disable */
-  originalConsole = {
-    error: console.error,
-    log: console.log,
-    warn: console.warn
-  };
-  console.log = mockLog('log');
-  console.warn = mockLog('warn');
-  console.error = mockLog('error');
-  /* tslint:enable */
+export function findParameters(testName: string): any[] {
+  return findTest(testName).parameters;
 }
 
-function enableOutput() {
-  if (process.env.FULL_OUTPUT) {
-    return;
-  }
-  /* tslint:disable */
-  console.log = originalConsole.log;
-  console.warn = originalConsole.warn;
-  console.error = originalConsole.error;
-  /* tslint:enable */
+export function findAttachment(testName: string, attachmentName: string): any {
+  return findAttachments(testName).find(attachment => attachment.name === attachmentName);
 }
 
-function startTestHttpServer() {
-  const fileServer = new staticServer.Server('./test/fixtures/');
-
-  const server = http.createServer((request, response) => {
-    request
-      .addListener('end', () => {
-        fileServer.serve(request, response);
-      })
-      .resume();
-  });
-  server.listen(54392);
-  enableDestroy(server);
-  return server;
+export function findAttachments(testName: string): any[] {
+  return findTest(testName).attachments;
 }
 
-function stopTestHttpServer(server) {
-  server.destroy();
+export function findStepAttachments(testName: string, stepName: string): any[] {
+  return findStep(testName, stepName).attachments;
+}
+
+export function findLinks(testName: string): any[] {
+  return findTest(testName).links;
+}
+
+export function findSteps(testName: string): any[] {
+  return findTest(testName).steps;
+}
+
+export function findStep(testName: string, stepName: string): any {
+  return findTest(testName).steps.find(step => step.name === stepName);
+}
+
+export function cleanResults() {
+  results = [];
+}
+
+export function readResults(pattern: string): any[] {
+  return findFiles(pattern).map(file => require(file));
+}
+
+export function findFiles(pattern: string): any[] {
+  return jetpack
+    .dir(resultsDir)
+    .find({ matching: pattern })
+    .map(fileName => path.join(resultsDir, fileName));
+}
+
+export function readProperties(fileName: string) {
+  return PropertiesReader(fileName);
+}
+
+function assignSpecs(mocha: Mocha, specs: string[]) {
+  jetpack
+    .dir(testDir)
+    .find({ matching: specs.map(spec => `${spec}.js`) })
+    .forEach(file => mocha.addFile(path.join(testDir, file)));
 }

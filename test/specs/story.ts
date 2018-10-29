@@ -1,29 +1,22 @@
+import { Status } from 'allure2-js-commons';
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
-import { clean, runMocha } from '../utils';
+import { suite } from 'mocha-typescript';
+import { cleanResults, findLabel, findTest, runTests, whenResultsAppeared } from '../utils';
 
 @suite
 class StorySuite {
   before() {
-    clean();
+    cleanResults();
+    runTests('story');
   }
 
   @test
-  shouldCallStoryOnReporter() {
-    return runMocha(['story']).then(results => {
-      const result = results[0];
-
-      expect(result('ns2\\:test-suite > name').text()).to.be.equal('StorySuite');
-      expect(
-        result('test-case > name')
-          .eq(0)
-          .text()
-      ).to.be.equal('shouldCallStoryOnReporter');
-      expect(
-        result('test-case label[name="story"]')
-          .eq(0)
-          .attr('value')
-      ).to.be.equal('3');
+  shouldHaveStories() {
+    const testName = 'shouldAssignDecoratedStory';
+    return whenResultsAppeared().then(() => {
+      expect(findTest('Story')).not.eq(undefined);
+      expect(findTest(testName).status).eq(Status.PASSED);
+      expect(findLabel(testName, 'story').value).eq('Common decorated story');
     });
   }
 }

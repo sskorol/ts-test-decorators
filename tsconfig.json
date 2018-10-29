@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
     "module": "commonjs",
     "declaration": true,
     "strict": true,
@@ -15,7 +15,7 @@
     "noImplicitAny": false,
     "typeRoots": [
       "./node_modules/@types/",
-      "./types/"
+      "./node_modules/allure2-js-commons/dist/declarations/**/"
     ]
   },
   "exclude": [

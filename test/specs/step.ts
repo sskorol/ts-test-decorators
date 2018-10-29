@@ -1,30 +1,47 @@
+import { Status } from 'allure2-js-commons';
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
-import { clean, runMocha } from '../utils';
+import { suite } from 'mocha-typescript';
+import { cleanResults, findSteps, findTest, runTests, whenResultsAppeared } from '../utils';
 
 @suite
 class StepSuite {
   before() {
-    clean();
+    cleanResults();
+    runTests('step');
   }
 
   @test
-  shouldCallStepOnReporter() {
-    return runMocha(['step']).then(results => {
-      const result = results[0];
+  shouldHaveSteps() {
+    const testName = 'shouldAddDecoratedSteps';
+    return whenResultsAppeared().then(() => {
+      expect(findTest('Step')).not.eq(undefined);
+      expect(findTest(testName).status).eq(Status.PASSED);
 
-      expect(result('ns2\\:test-suite > name').text()).to.be.equal('StepSuite');
-      expect(
-        result('test-case > name')
-          .eq(0)
-          .text()
-      ).to.be.equal('shouldCallStepOnReporter');
-      expect(
-        result('test-case step name')
-          .eq(0)
-          .eq(0)
-          .text()
-      ).to.be.equal('Get user full name');
+      const steps = findSteps(testName);
+      expect(steps.map(step => step.name)).deep.eq([
+        'Execute step 1',
+        'Execute step 2',
+        'Execute step 3',
+        'Execute step 5',
+        'Execute step 1'
+      ]);
+      expect(steps.map(step => step.status)).contains(Status.PASSED);
+
+      let subStep = steps.find(step => step.name === 'Execute step 2').steps.pop();
+      expect(subStep.name).eq('Execute step 3');
+      expect(subStep.status).eq(Status.PASSED);
+
+      subStep = subStep.steps.pop();
+      expect(subStep.name).eq('Execute step 4');
+      expect(subStep.status).eq(Status.PASSED);
+
+      subStep = steps.find(step => step.name === 'Execute step 3').steps.pop();
+      expect(subStep.name).eq('Execute step 4');
+      expect(subStep.status).eq(Status.PASSED);
+
+      subStep = steps.find(step => step.name === 'Execute step 5').steps.pop();
+      expect(subStep.name).eq('Execute step 6');
+      expect(subStep.status).eq(Status.PASSED);
     });
   }
 }

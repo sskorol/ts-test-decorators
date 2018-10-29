@@ -2,8 +2,8 @@ import { suite, test } from 'mocha-typescript';
 import { story } from '../../../index';
 
 @suite
-class StorySuite {
-  @story('3')
+class Story {
+  @story('Common decorated story')
   @test
-  shouldCallStoryOnReporter() {}
+  shouldAssignDecoratedStory() {}
 }

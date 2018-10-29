@@ -44,24 +44,28 @@ The answer is using Typescript and decorators.
 
 [mocha-typescript](https://github.com/pana-cc/mocha-typescript) will help us with core features.
 However, it has nothing to do with [Allure](https://github.com/webdriverio-boneyard/wdio-allure-reporter).
-Moreover, there's no flexible [Data Provider](https://github.com/sskorol/test-data-supplier) mechanism available. 
+Moreover, there's no flexible [DataProvider](https://github.com/sskorol/test-data-supplier) mechanism available. 
 
 This library is intended to fill these gaps, so that you can write [webdriverio](https://github.com/webdriverio/webdriverio) tests the following way:
 
 ```typescript
+import { Severity } from "allure2-js-commons";
 import { suite, test } from 'mocha-typescript';
-import { data, feature, issue, severity, SeverityLevel, story, testCaseId } from 'ts-test-decorators';
+import { data, description, feature, issue, owner, severity, story, tag, testCaseId } from 'ts-test-decorators';
       
 @suite
 class AuthorizationTests {
       
   @issue('42')
   @testCaseId('58')
+  @severity(Severity.BLOCKER)
   @feature('Login')
   @story('58')
-  @severity(SeverityLevel.Blocker)
+  @owner('skorol')
+  @tag('smoke')
+  @description('Basic authorization test.')
   @data(testData())
-  @data.withCustomTestName(user => `${user} should be able to sign in`)
+  @data.withCustomTestName(user => `${user} should be able to sign`)
   userShouldBeAbleToSignIn(user: User) {
     open(LoginPage)
       .loginWith(user)
@@ -83,14 +87,28 @@ function testData(): Array<User> {
 ## Installation
 
 ```bash
-npm install ts-test-decorators --save-dev
+npm install allure2-js-commons mocha-allure2-reporter ts-test-decorators --save-dev
 ```
 or via yarn:
 ```bash
-yarn add ts-test-decorators --dev
+yarn add allure2-js-commons mocha-allure2-reporter ts-test-decorators --dev
 ```
 
 ## Configuration
+
+Either add **mocha-allure2-reporter** into **mocha.opts**:
+
+```text
+--ui mocha-typescript
+--require source-map-support/register
+--reporter mocha-allure2-reporter
+```
+
+Or pass the same value via commandline / scripts:
+
+```bash
+mocha -R mocha-allure2-reporter
+```
 
 **tsconfig.json** may look like the following:
 ```json
@@ -110,7 +128,7 @@ yarn add ts-test-decorators --dev
     "noImplicitAny": false,
     "typeRoots": [
       "./node_modules/@types/",
-      "./node_modules/ts-test-decorators/types/"
+      "./node_modules/allure2-js-commons/dist/declarations/**/"
     ]
   },
   "exclude": [
@@ -119,25 +137,17 @@ yarn add ts-test-decorators --dev
   "compileOnSave": false
 }
 ```
-**wdio.conf.js** should use mocha-typescript ui with additional compiler options:
-```javascript
-  mochaOpts: {
-    ui: 'mocha-typescript',
-    compilers: ['ts:ts-node/register'],
-    require: ['source-map-support/register']
-  },
-  reporters: ['allure'],
-  before: function(capabilities, specs) {
-    global.reporter = require('wdio-allure-reporter');
-  }
-```
-Note that you have to put allure reporter into test scope to use the following decorators:
+
+Now you can use the following decorators:
 
  - `issue(idFn: string | ((arg: any) => string))`
  - `testCaseId(idFn: string | ((arg: any) => string))`
  - `feature(featureFn: string | ((arg: any) => string))`
  - `story(storyFn: string | ((arg: any) => string))`
- - `severity(severityFn: SeverityLevel | string | ((arg: any) => string))`
+ - `severity(severityFn: Severity | string | ((arg: any) => string))`
+ - `tag(tagFn: string | ((arg: any) => string))`
+ - `owner(ownerFn: string | ((arg: any) => string))`
+ - `description(descriptionFn: string | ((arg: any) => string))`
  - `step(nameFn: string | ((arg: any) => string))`
  - `data(params: any, name?: string)`
  - `data.withCustomTestName(nameForTests: (parameters: any) => string)`
@@ -146,12 +156,4 @@ Note that you have to put allure reporter into test scope to use the following d
 
 Also be aware of **@test** and **@data** order. They should be always put before actual test method signature.
 
-Moreover, both decorators replace each other. If you're using **@data**, you don't need to specify **@test**, and vice versa.  
-
-You should also care of **package.json** scripts to compile TS code before actual tests execution:
-```json
-  "scripts": {
-    "pretest": "tsc",
-    "test": "wdio wdio.conf.js",
-  }
-```
+Moreover, both decorators replace each other. If you're using **@data**, you don't need to specify **@test**, and vice versa (mocha-typescript specifics).

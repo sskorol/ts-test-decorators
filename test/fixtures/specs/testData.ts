@@ -2,7 +2,7 @@ import { suite } from 'mocha-typescript';
 import { data } from '../../../index';
 
 @suite
-class DataSuite {
+class TestData {
   @data(testData())
   @data.withCustomTestName(value => `shouldCall${value}DataOnTest`)
   shouldCallDataOnTest(value) {}

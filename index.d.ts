@@ -1,3 +1,4 @@
+import { Severity } from 'allure2-js-commons';
 export declare function step(
   nameFn: string | ((arg: any) => string)
 ): (target: any, property: any, descriptor: any) => any;
@@ -14,7 +15,16 @@ export declare function story(
   storyFn: string | ((arg: any) => string)
 ): (target: any, property: any, descriptor: any) => any;
 export declare function severity(
-  severityFn: SeverityLevel | string | ((arg: any) => string)
+  severityFn: Severity | string | ((arg: any) => string)
+): (target: any, property: any, descriptor: any) => any;
+export declare function tag(
+  tagFn: string | ((arg: any) => string)
+): (target: any, property: any, descriptor: any) => any;
+export declare function owner(
+  ownerFn: string | ((arg: any) => string)
+): (target: any, property: any, descriptor: any) => any;
+export declare function description(
+  descriptionFn: string | ((arg: any) => string)
 ): (target: any, property: any, descriptor: any) => any;
 export declare const data: ((
   params: any,
@@ -27,10 +37,3 @@ export declare const data: ((
     nameForParameters: (parameters: any) => string
   ) => (target: any, propertyKey: string, descriptor: any) => any;
 };
-export declare enum SeverityLevel {
-  Blocker = 'blocker',
-  Critical = 'critical',
-  Normal = 'normal',
-  Minor = 'minor',
-  Trivial = 'trivial'
-}

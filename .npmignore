@@ -1,4 +1,4 @@
-.allure-results
+allure-results
 node_modules/
 test
 *.js

@@ -1,29 +1,22 @@
+import { Status } from 'allure2-js-commons';
 import { expect } from 'chai';
 import { suite } from 'mocha-typescript';
-import { clean, runMocha } from '../utils';
+import { cleanResults, findLabel, findTest, runTests, whenResultsAppeared } from '../utils';
 
 @suite
 class FeatureSuite {
   before() {
-    clean();
+    cleanResults();
+    runTests('feature');
   }
 
   @test
-  shouldCallFeatureOnReporter() {
-    return runMocha(['feature']).then(results => {
-      const result = results[0];
-
-      expect(result('ns2\\:test-suite > name').text()).to.be.equal('FeatureSuite');
-      expect(
-        result('test-case > name')
-          .eq(0)
-          .text()
-      ).to.be.equal('shouldCallFeatureOnReporter');
-      expect(
-        result('test-case label[name="feature"]')
-          .eq(0)
-          .attr('value')
-      ).to.be.equal('Test Feature');
+  shouldHaveFeature() {
+    const testName = 'shouldAssignDecoratedFeature';
+    return whenResultsAppeared().then(() => {
+      expect(findTest('Feature')).not.eq(undefined);
+      expect(findTest(testName).status).eq(Status.PASSED);
+      expect(findLabel(testName, 'feature').value).eq('Decorated Feature');
     });
   }
 }
