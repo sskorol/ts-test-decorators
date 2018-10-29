@@ -1,30 +1,26 @@
 {
   "name": "ts-test-decorators",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Write your tests in a Java-like annotation-driven manner via JS decorators.",
   "main": "index.js",
   "keywords": [
     "mocha",
     "typescript",
     "allure",
-    "decorator",
-    "webdriverio"
+    "decorator"
   ],
   "author": "Sergey Korol",
   "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/sskorol/ts-test-decorators"
-  },
-  "bugs": {
-    "url": "https://github.com/sskorol/ts-test-decorators/issues"
-  },
+  "repository": "https://github.com/sskorol/ts-test-decorators",
+  "bugs": "https://github.com/sskorol/ts-test-decorators/issues",
   "homepage": "https://github.com/sskorol/ts-test-decorators#README.md",
   "scripts": {
     "build": "tsc",
-    "clean": "rimraf ./coverage ./.allure-results ./.nyc_output ./package",
+    "clean": "rimraf ./coverage ./allure-results ./.nyc_output ./package",
     "pretest": "yarn && tsc",
     "test": "yarn clean && yarn tslint && nyc mocha",
+    "generate-report": "allure generate ./allure-results -o ./.allure-report --clean",
+    "allure-report": "allure serve ./allure-results",
     "coverage": "codecov",
     "tslint-fix": "tslint --fix --project .",
     "tslint": "tslint --project .",
@@ -32,42 +28,41 @@
     "postcommit": "git update-index -g"
   },
   "dependencies": {
+    "@types/dotenv": "^4.0.3",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.0",
+    "allure2-js-commons": "^1.2.0",
+    "dotenv": "^6.1.0",
     "mocha": "^5.2.0",
     "mocha-typescript": "^1.1.17",
     "source-map-support": "^0.5.9",
     "ts-node": "^7.0.1",
-    "typescript": "^3.1.3",
-    "wdio-allure-reporter": "^0.8.2",
-    "wdio-mocha-framework": "^0.6.3",
-    "webdriverio": "^4.13.2"
+    "typescript": "^3.1.3"
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
+    "allure-commandline": "^2.7.0",
     "chai": "^4.2.0",
-    "cheerio": "^1.0.0-rc.2",
     "codecov": "^3.1.0",
-    "del": "^3.0.0",
+    "fs-jetpack": "^2.2.0",
     "husky": "^1.1.2",
     "lint-staged": "^7.3.0",
-    "node-static": "^0.7.11",
+    "mocha-allure2-reporter": "^0.0.1",
     "nyc": "^13.1.0",
     "prettier": "^1.14.3",
+    "properties-reader": "^0.0.16",
     "rimraf": "^2.6.2",
-    "server-destroy": "^1.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-eslint-rules": "^5.4.0",
-    "tslint-plugin-prettier": "^2.0.0",
-    "wdio-phantomjs-service": "^0.2.2"
+    "tslint-plugin-prettier": "^2.0.0"
   },
   "nyc": {
     "check-coverage": true,
     "lines": 95,
     "statements": 95,
     "functions": 95,
-    "branches": 85,
+    "branches": 75,
     "extension": [
       ".ts"
     ],

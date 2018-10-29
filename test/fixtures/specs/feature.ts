@@ -2,8 +2,8 @@ import { suite, test } from 'mocha-typescript';
 import { feature } from '../../../index';
 
 @suite
-class FeatureSuite {
-  @feature('Test Feature')
+class Feature {
+  @feature('Decorated Feature')
   @test
-  shouldCallFeatureOnReporter() {}
+  shouldAssignDecoratedFeature() {}
 }

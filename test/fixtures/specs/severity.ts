@@ -1,9 +1,10 @@
+import { Severity } from 'allure2-js-commons';
 import { suite, test } from 'mocha-typescript';
-import { severity, SeverityLevel } from '../../../index';
+import { severity } from '../../../index';
 
 @suite
-class SeveritySuite {
-  @severity(SeverityLevel.Blocker)
+class SeveritySubSuite {
+  @severity(Severity.CRITICAL)
   @test
-  shouldCallSeverityOnReporter() {}
+  shouldAssignDecoratedSeverity() {}
 }

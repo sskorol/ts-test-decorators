@@ -1,24 +1,22 @@
+import { Status } from 'allure2-js-commons';
 import { expect } from 'chai';
-import { suite, test } from 'mocha-typescript';
-import { clean, runMocha } from '../utils';
+import { suite } from 'mocha-typescript';
+import { cleanResults, findParameter, findTest, runTests, whenResultsAppeared } from '../utils';
 
 @suite
-class DataSuite {
+class ParameterSuite {
   before() {
-    clean();
+    cleanResults();
+    runTests('testData');
   }
 
   @test
-  shouldCallTestDataOnTest() {
-    return runMocha(['testData']).then(results => {
-      const result = results[0];
-
-      expect(result('ns2\\:test-suite > name').text()).to.be.equal('DataSuite');
-      expect(
-        result('test-case > name')
-          .eq(0)
-          .text()
-      ).to.be.equal('shouldCallTestDataOnTest');
+  shouldHaveParameter() {
+    const testName = 'shouldCallTestDataOnTest';
+    return whenResultsAppeared().then(() => {
+      expect(findTest('TestData')).not.eq(undefined);
+      expect(findTest(testName).status).eq(Status.PASSED);
+      expect(findParameter(testName, 'inputs').value).eq('Test');
     });
   }
 }

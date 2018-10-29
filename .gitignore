@@ -1,4 +1,4 @@
-.allure-results
+allure-results
 node_modules/
 *.js
 *.tgz
@@ -9,6 +9,5 @@ package
 coverage
 *.log
 *.d.ts
-!types/**/*.d.ts
 !index.d.ts
-!test/fixtures/wdio.conf/**/*.*
+test/utils/index.d.ts

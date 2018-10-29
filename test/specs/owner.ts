@@ -1,22 +1,22 @@
-import { Severity, Status } from 'allure2-js-commons';
+import { Status } from 'allure2-js-commons';
 import { expect } from 'chai';
 import { suite } from 'mocha-typescript';
 import { cleanResults, findLabel, findTest, runTests, whenResultsAppeared } from '../utils';
 
 @suite
-class SeveritySuite {
+class OwnerSuite {
   before() {
     cleanResults();
-    runTests('severity');
+    runTests('owner');
   }
 
   @test
-  shouldHaveSeverity() {
-    const testName = 'shouldAssignDecoratedSeverity';
+  shouldHaveOwner() {
+    const testName = 'shouldAssignDecoratedOwner';
     return whenResultsAppeared().then(() => {
-      expect(findTest('SeveritySubSuite')).not.eq(undefined);
+      expect(findTest('Owner')).not.eq(undefined);
       expect(findTest(testName).status).eq(Status.PASSED);
-      expect(findLabel(testName, 'severity').value).eq(Severity.CRITICAL);
+      expect(findLabel(testName, 'owner').value).eq('Sergey Korol');
     });
   }
 }
