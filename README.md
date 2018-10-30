@@ -161,3 +161,7 @@ Moreover, both decorators replace each other. If you're using **@data**, you don
 ## Examples
 
 See [mocha-allure2-example](https://github.com/sskorol/mocha-allure2-example) project, which is already configured to use latest Allure 2 features with decorators support.
+
+## Thanks
+
+[@srg-kostyrko](https://github.com/srg-kostyrko) for help and assistance.
