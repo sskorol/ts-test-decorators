@@ -87,12 +87,20 @@ function testData(): Array<User> {
 ## Installation
 
 ```bash
-npm install allure2-js-commons mocha-allure2-reporter ts-test-decorators --save-dev
+npm i ts-test-decorators --save-dev
 ```
 or via yarn:
 ```bash
-yarn add allure2-js-commons mocha-allure2-reporter ts-test-decorators --dev
+yarn add ts-test-decorators --dev
 ```
+
+As it's just an addition to [mocha-allure2-reporter](https://github.com/sskorol/mocha-allure2-reporter), it's recommended to install the following dependencies:
+
+ - mocha
+ - mocha-allure2-reporter
+ - mocha-typescript
+ - source-map-support
+ - typescript
 
 ## Configuration
 

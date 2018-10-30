@@ -1783,10 +1783,10 @@ mkdirp@0.5.1, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mocha-allure2-reporter@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/mocha-allure2-reporter/-/mocha-allure2-reporter-0.0.1.tgz#22315007711f1b25c6b117f8f202d055d6d1a613"
-  integrity sha512-yR89fVDD3gHNuqz/LWD+0IC8Eh/5GSmjPzCMrWO+cJgyvvlwUJdm7oT3EXpAOaj9sC5k47kSBA+k3wfZOBQrJg==
+mocha-allure2-reporter@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/mocha-allure2-reporter/-/mocha-allure2-reporter-0.0.2.tgz#1ef159456b2b5c3e9c51a2ee6ea1a5e41748a121"
+  integrity sha512-bIbKOt1QBOp7+/lihogRgHP+A1XZkfJ3FG6Gj3F1cZpKYYhuokfco5937I9ahDToyI1/1y8MO6HA4gNEvxk/MA==
   dependencies:
     allure2-js-commons "^1.2.0"
 
