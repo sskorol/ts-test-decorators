@@ -157,3 +157,7 @@ Now you can use the following decorators:
 Also be aware of **@test** and **@data** order. They should be always put before actual test method signature.
 
 Moreover, both decorators replace each other. If you're using **@data**, you don't need to specify **@test**, and vice versa (mocha-typescript specifics).
+
+## Examples
+
+See [mocha-allure2-example](https://github.com/sskorol/mocha-allure2-example) project, which is already configured to use latest Allure 2 features with decorators support.
