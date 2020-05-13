@@ -1,4 +1,6 @@
 import { Severity } from 'allure2-js-commons';
+export declare function setPmsUrl(value: string): void;
+export declare function setTmsUrl(value: string): void;
 export declare function step(
   nameFn: string | ((arg: any) => string)
 ): (target: any, property: any, descriptor: any) => any;

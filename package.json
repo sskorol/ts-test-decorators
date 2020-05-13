@@ -28,12 +28,10 @@
     "postcommit": "git update-index -g"
   },
   "dependencies": {
-    "allure2-js-commons": "^1.2.0",
-    "dotenv": "^6.1.0"
+    "allure2-js-commons": "^1.2.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
-    "@types/dotenv": "^4.0.3",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.0",
     "allure-commandline": "^2.7.0",
@@ -50,11 +48,11 @@
     "properties-reader": "^0.0.16",
     "rimraf": "^2.6.2",
     "source-map-support": "^0.5.9",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-plugin-prettier": "^2.0.0",
-    "ts-node": "^7.0.1",
     "typescript": "^3.1.3"
   },
   "nyc": {
@@ -62,7 +60,7 @@
     "lines": 95,
     "statements": 95,
     "functions": 95,
-    "branches": 75,
+    "branches": 70,
     "extension": [
       ".ts"
     ],

@@ -1,7 +1,4 @@
 import { AllureInterface, Severity } from 'allure2-js-commons';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 const nodeSymbol = (key): string => '__mts_' + key;
 const testNameSymbol = nodeSymbol('test');
@@ -9,8 +6,14 @@ const parametersSymbol = nodeSymbol('parametersSymbol');
 const nameForParametersSymbol = nodeSymbol('nameForParameters');
 
 const localhost = 'http://localhost';
-const pmsUrl = process.env.PMS_URL || localhost;
-const tmsUrl = process.env.TMS_URL || localhost;
+let pmsUrl = localhost;
+let tmsUrl = localhost;
+export function setPmsUrl(value: string) {
+  pmsUrl = value;
+}
+export function setTmsUrl(value: string) {
+  tmsUrl = value;
+}
 
 const enum Mark {
   test,
@@ -74,7 +77,7 @@ function processDescriptor(
   if (typeof original === 'function') {
     descriptor.value = function(...args) {
       try {
-        const value = typeof parameterFn === 'function' ? parameterFn.apply(this, args) : parameterFn;
+        const value = typeof parameterFn === 'function' ? parameterFn.apply(this, args as [any]) : parameterFn;
         reporterFn(value);
       } catch (e) {
         // tslint:disable-next-line:no-console
@@ -106,7 +109,7 @@ export function step(nameFn: string | ((arg: any) => string)) {
     if (typeof original === 'function') {
       descriptor.value = function(...args) {
         try {
-          const value = typeof nameFn === 'function' ? nameFn.apply(this, args) : nameFn;
+          const value = typeof nameFn === 'function' ? nameFn.apply(this, args as [any]) : nameFn;
           callable = () => getAllure().step(value, () => original.apply(this, args));
         } catch (e) {
           // tslint:disable-next-line:no-console

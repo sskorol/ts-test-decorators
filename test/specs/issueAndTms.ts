@@ -21,7 +21,7 @@ class IssueAndTmsSuite {
       expect(findTest(testName).status).eq(Status.PASSED);
 
       expect(links.map(link => link.name)).contains('4', '5');
-      expect(links.map(link => link.url)).contains('http://localhost/4', 'http://localhost/5');
+      expect(links.map(link => link.url)).contains('http://pms-url/4', 'http://tms-url/5');
       expect(links.map(link => link.type)).contains('issue', 'tms');
     });
   }
