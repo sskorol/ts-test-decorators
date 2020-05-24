@@ -1,25 +1,28 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "declaration": true,
-    "strict": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "target": "es6",
     "lib": [
       "es6"
     ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "strict": true,
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "removeComments": true,
     "noImplicitAny": false,
-    "typeRoots": [
-      "./node_modules/@types/",
-      "./node_modules/allure2-js-commons/dist/declarations/**/"
-    ]
+    "esModuleInterop": true,
+    "paths": {
+      "*": ["node_modules/*"]
+    },
+    "baseUrl": ".",
+    "outDir": "dist",
+    "typeRoots" : ["./node_modules/@types"]
   },
-  "exclude": [
-    "./node_modules/"
-  ],
-  "compileOnSave": false
+  "include": [
+    "src/**/*.ts"
+  ]
 }

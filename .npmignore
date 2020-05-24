@@ -1,6 +1,8 @@
+.allure-report
 allure-results
 node_modules/
-test
+tests
+src
 *.js
 *.tgz
 .DS_Store
