@@ -38,23 +38,47 @@ public class AuthorizationTests {
 ```
 
 Everyone in a Java world get used to strict types, classes and annotations.
-You may wondering how to achieve the same in JS?
+You may wonder how to achieve the same in JS?
 
 The answer is using Typescript and decorators.
 
-[mocha-typescript](https://github.com/pana-cc/mocha-typescript) will help us with core features.
-However, it has nothing to do with [Allure](https://github.com/webdriverio-boneyard/wdio-allure-reporter).
+[@testdeck/mocha](https://www.npmjs.com/package/@testdeck/mocha) will help us with core features.
+However, it has nothing to do with [Allure](https://github.com/allure-framework/allure-js).
 Moreover, there's no flexible [DataProvider](https://github.com/sskorol/test-data-supplier) mechanism available. 
 
-This library is intended to fill these gaps, so that you can write [webdriverio](https://github.com/webdriverio/webdriverio) tests the following way:
+This library fills these gaps, so that you can write your tests the following way:
 
 ```typescript
-import { Severity } from "allure2-js-commons";
-import { suite, test } from 'mocha-typescript';
-import { data, description, feature, issue, owner, severity, story, tag, testCaseId } from 'ts-test-decorators';
+import { Severity } from "allure2-js-commons"
+import { suite, test } from '@testdeck/mocha'
+import {
+  assignPmsUrl,
+  assignTmsUrl,
+  decorate,
+  data,
+  description,
+  feature,
+  issue,
+  owner,
+  severity,
+  story,
+  tag,
+  testCaseId
+} from 'ts-test-decorators'
+import { allure, MochaAllure } from 'allure-mocha/runtime'
       
 @suite
 class AuthorizationTests {
+  static testData = () => {
+    return new User('Test', 'User')
+  }
+
+  before() {
+    const gitHubUrl: string = 'https://github.com/sskorol/ts-test-decorators/issues'
+    assignPmsUrl(gitHubUrl)
+    assignTmsUrl(gitHubUrl)
+    decorate<MochaAllure>(allure)
+  }
       
   @issue('42')
   @testCaseId('58')
@@ -64,24 +88,18 @@ class AuthorizationTests {
   @owner('skorol')
   @tag('smoke')
   @description('Basic authorization test.')
-  @data(testData())
-  @data.withCustomTestName(user => `${user} should be able to sign`)
+  @data(AuthorizationTests.testData)
+  @data.naming((user: User) => `${user} should be able to sign`)
+  @test
   userShouldBeAbleToSignIn(user: User) {
     open(LoginPage)
       .loginWith(user)
-      .select(ProfilePage);
+      .select(ProfilePage)
     
     verifyThat(atProfilePage)
       .fullNameIs(user.fullName)
-      .usernameIs(user.username);
+      .usernameIs(user.username)
   }
-}
-    
-function testData(): Array<User> {
-  return [
-    new User('stranger', '123456', 'Strange Person'),
-    new User('test', '123456', 'Test User')
-  ];
 }
 ``` 
 ## Installation
@@ -94,82 +112,116 @@ or via yarn:
 yarn add ts-test-decorators --dev
 ```
 
-As it's just an addition to [mocha-allure2-reporter](https://github.com/sskorol/mocha-allure2-reporter), it's recommended to install the following dependencies:
+As it's an extension to [allure-js](https://github.com/allure-framework/allure-js) and [testdeck](https://www.npmjs.com/package/@testdeck/mocha), you have to install the following dependencies:
 
  - mocha
- - mocha-allure2-reporter
- - mocha-typescript
+ - @testdeck/mocha
+ - allure-mocha
+ - allure-js-commons
  - source-map-support
  - typescript
 
 ## Configuration
 
-Either add **mocha-allure2-reporter** into **mocha.opts**:
+Either add **allure-mocha** into **.mocharc.json**:
 
-```text
---ui mocha-typescript
---require source-map-support/register
---reporter mocha-allure2-reporter
+```json
+{
+  "require": "source-map-support/register",
+  "reporter": "allure-mocha"
+}
 ```
 
 Or pass the same value via commandline / scripts:
 
 ```bash
-mocha -R mocha-allure2-reporter
+mocha -R allure-mocha
 ```
 
 **tsconfig.json** may look like the following:
 ```json
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2017",
     "module": "commonjs",
     "inlineSourceMap": true,
     "inlineSources": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "declaration": true,
     "lib": [
-      "es6",
-      "dom"
+      "es7"
+    ],
+    "types": [
+      "node",
+      "mocha",
+      "chai"
     ],
     "removeComments": true,
     "noImplicitAny": false,
+    "baseUrl": ".",
+    "paths": {
+      "*": [ "./*" ],
+      "src/*": ["./src/*"]
+    },
     "typeRoots": [
-      "./node_modules/@types/",
-      "./node_modules/allure2-js-commons/dist/declarations/**/"
+      "node_modules/@types"
     ]
   },
-  "exclude": [
-    "./node_modules/"
+  "include": [
+    "./src/**/*.ts"
   ],
-  "compileOnSave": false
+  "exclude": [
+    "node_modules"
+  ]
 }
 ```
 
 Now you can use the following decorators:
 
- - `issue(idFn: string | ((arg: any) => string))`
- - `testCaseId(idFn: string | ((arg: any) => string))`
- - `feature(featureFn: string | ((arg: any) => string))`
- - `story(storyFn: string | ((arg: any) => string))`
- - `severity(severityFn: Severity | string | ((arg: any) => string))`
- - `tag(tagFn: string | ((arg: any) => string))`
- - `owner(ownerFn: string | ((arg: any) => string))`
- - `description(descriptionFn: string | ((arg: any) => string))`
- - `step(nameFn: string | ((arg: any) => string))`
+ - `attachment<T>(name: string, type: ContentType)`
+ - `issue<T>(idFn: string | ((arg: T) => string))`
+ - `testCaseId<T>(idFn: string | ((arg: T) => string))`
+ - `feature<T>(featureFn: string | ((arg: T) => string))`
+ - `story<T>(storyFn: string | ((arg: T) => string))`
+ - `severity<T>(severityFn: Severity | string | ((arg: T) => string | Severity))`
+ - `tag<T>(tagFn: string | ((arg: T) => string))`
+ - `owner<T>(ownerFn: string | ((arg: T) => string))`
+ - `epic<T>(epicFn: string | ((arg: T) => string))`
+ - `description<T>(descriptionFn: string | ((arg: T) => string))`
+ - `step<T>(nameFn: string | ((arg: T) => string))`
  - `data(params: any, name?: string)`
- - `data.withCustomTestName(nameForTests: (parameters: any) => string)`
+ - `data.naming(nameForTests: (parameters: any) => string)`
 
-**@data** is not related to Allure. It's just a wrapper for mocha-typescript **@params** [decorator](https://github.com/pana-cc/mocha-typescript/blob/master/test/it/fixtures/params.naming.suite.ts).
+To activate decorators you have to provide Allure implementation in runtime. You can do that the following way:
+```typescript
+import { decorate } from 'ts-test-decorators';
+import { allure, MochaAllure } from 'allure-mocha/runtime'
+// ...
+  before() {
+    decorate<MochaAllure>(allure)
+  }
+```
 
-Also be aware of **@test** and **@data** order. They should be always put before actual test method signature.
+If you want to set you own trackers' URLs, do the following:
+```typescript
+import { assignPmsUrl, assignTmsUrl } from 'ts-test-decorators';
+// ...
+  before() {
+    const gitHubUrl: string = 'https://github.com/sskorol/ts-test-decorators/issues'
+    assignPmsUrl(gitHubUrl)
+    assignTmsUrl(gitHubUrl)
+  }
+```
 
-Moreover, both decorators replace each other. If you're using **@data**, you don't need to specify **@test**, and vice versa (mocha-typescript specifics).
+**@data** is not related to Allure. It's just a wrapper for testdeck **@params** decorator.
+
+Also, be aware of **@test** and **@data** order. They should be always put before actual test method signature.
 
 ## Examples
 
 See [mocha-allure2-example](https://github.com/sskorol/mocha-allure2-example) project, which is already configured to use latest Allure 2 features with decorators support.
 
-## Thanks
+## Special Thanks
 
 [@srg-kostyrko](https://github.com/srg-kostyrko) for help and assistance.

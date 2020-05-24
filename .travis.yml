@@ -1,11 +1,7 @@
 language: node_js
 node_js:
-  - "10"
-cache:
-  yarn: true
-  directories:
-    - node_modules
+  - "13"
 script:
-  yarn test
+  npm test
 after_success:
-  yarn coverage
+  npm run coverage

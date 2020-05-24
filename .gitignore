@@ -1,5 +1,7 @@
+.allure-report
 allure-results
-node_modules/
+node_modules
+dist
 *.js
 *.tgz
 .DS_Store
@@ -9,5 +11,4 @@ package
 coverage
 *.log
 *.d.ts
-!index.d.ts
-test/utils/index.d.ts
+/**/*.tgz

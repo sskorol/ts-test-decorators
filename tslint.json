@@ -49,7 +49,7 @@
       "avoid-template"
     ],
     "semicolon": [
-      true,
+      false,
       "always"
     ]
   },
