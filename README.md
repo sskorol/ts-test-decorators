@@ -4,6 +4,8 @@
 [![codecov](https://codecov.io/gh/sskorol/ts-test-decorators/branch/master/graph/badge.svg)](https://codecov.io/gh/sskorol/ts-test-decorators)
 [![npm version](https://badge.fury.io/js/ts-test-decorators.svg)](https://badge.fury.io/js/ts-test-decorators)
 
+**IMPORTANT NOTE**: this functionality is already included into [allure-js](https://github.com/allure-framework/allure-js) as a separate `allure-decorators` module So feel free to check it out if you already have Allure integration.
+
 This project will help to smoothly migrate from Java to Javascript automation.
 
 Let's say we have the following test written in Java:
